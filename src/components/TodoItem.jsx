@@ -1,0 +1,1 @@
+// TodoItem: Represents a single todo item, allowing interaction (toggle, delete, edit).
