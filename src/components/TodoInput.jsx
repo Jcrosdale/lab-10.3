@@ -25,7 +25,7 @@ export default function TodoInput() {
     return (
         <form onSubmit={handleSubmit}>
             <input type='text' value={input} onChange={handleInput} />
-            <button type='submit'>Add Todo</button>
+            <button type='submit'>Add</button>
         </form>
     )
 }
