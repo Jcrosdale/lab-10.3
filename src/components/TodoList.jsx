@@ -7,7 +7,7 @@ import TodoItem from "./TodoItem";
 import { FilterContext } from "../context/FilterContext";
 
 export default function TodoList() {
-    const { todos } = useContext(TodoContext)
+    const { todos, clearCompleted } = useContext(TodoContext)
     const { filter } = useContext(FilterContext)
 
     // useMemo
@@ -33,6 +33,7 @@ export default function TodoList() {
     return (
         <>
             <h1>Todo List</h1>
+            <button onClick={clearCompleted}>Clear Completed</button>
             {todoItems}
         </>
     )
