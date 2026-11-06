@@ -43,23 +43,31 @@ export default function TodoProvider({ children }) {
 
     // Removes a todo item from the list.
     const deleteTodo = (id) => {
-        setTodos(todos.filter(todo => todo.id !== todo.id))
+
+        setTodos(todos.filter(todo => todo.id !== id))
     };
 
     // Edits the text of an existing todo item.
     const editTodo = (id, newText) => {
 
         setTodos(todos.map(todo => {
-
-            const newTodo = {
-                text: newText
+            if (todo.id === id) {
+                return {
+                    ...todo,
+                    text: newText
+                }
+            } else {
+                return todo
             }
 
+            
         }))
     };
 
     // Removes all completed todos.
     const clearCompleted = () => {
+
+        setTodos(todos.filter(todo => !todo.completed))
 
     };
 
