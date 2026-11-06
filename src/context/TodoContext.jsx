@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useCallback } from 'react';
 
 // context
 export const TodoContext = createContext()
@@ -19,7 +19,7 @@ export default function TodoProvider({ children }) {
     // functions
 
     // Adds a new todo item to the list.
-    const addTodo = (text) => {
+    const addTodo = useCallback((text) => {
 
         const newTodo = {
             id: Date.now(), // A unique identifier (string or number).
@@ -29,58 +29,46 @@ export default function TodoProvider({ children }) {
 
         setTodos([...todos, newTodo]);
 
-    };
+    }, []);
 
     // Toggles the completed status of a todo item.
-    const toggleTodo = (id) => {
+    const toggleTodo = useCallback((id) => {
 
-        setTodos(todos.map(todo => {
-            if (todo.id === id) {
-                return {
-                    ...todo,
-                    completed: !todo.completed
-                }
-            } else {
-                return todo
-            }
-        })
-        )
+        setTodos(prevTodos =>
+            prevTodos.map(todo => 
+            todo.id === id ? { ...todo, completed: !todo.completed } : todo)
+              
+        )}, [])
+        
 
-    };
 
     // Removes a todo item from the list.
-    const deleteTodo = (id) => {
+    const deleteTodo = useCallback((id) => {
 
-        setTodos(todos.filter(todo => todo.id !== id))
-    };
+        setTodos(prevTodos =>
+            prevTodos.filter(todo => todo.id !== id))
+    }, []);
 
     // Edits the text of an existing todo item.
-    const editTodo = (id, newText) => {
+    const editTodo = useCallback((id, newText) => {
 
-        setTodos(todos.map(todo => {
-            if (todo.id === id) {
-                return {
-                    ...todo,
-                    text: newText
-                }
-            } else {
-                return todo
-            }
+        setTodos(prevTodos =>
+            prevTodos.map(todo =>
+                todo.id === id ? { ...todo, text: newText } : todo)
 
-            
-        }))
-    };
+        )}, [])
 
-    // Removes all completed todos.
-    const clearCompleted = () => {
+// Removes all completed todos.
+const clearCompleted = useCallback(() => {
 
-        setTodos(todos.filter(todo => !todo.completed))
-
-    };
-
-    return (
-        <TodoContext.Provider value={{ todos, setTodos, addTodo, toggleTodo, deleteTodo, editTodo, clearCompleted }}>
-            {children}
-        </TodoContext.Provider>
+    setTodos(prevTodos =>
+        prevTodos.filter(todo => !todo.completed)
     )
+}, []);
+
+return (
+    <TodoContext.Provider value={{ todos, setTodos, addTodo, toggleTodo, deleteTodo, editTodo, clearCompleted }}>
+        {children}
+    </TodoContext.Provider>
+)
 }
